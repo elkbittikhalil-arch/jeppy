@@ -1,0 +1,426 @@
+/* === Base — fractured dark purple void === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  overflow: hidden;
+  font-family: ui-monospace, "Cascadia Code", "Consolas", "Segoe UI", system-ui, sans-serif;
+  background: #050208;
+  color: #ddd4e8;
+}
+
+/* === Full-viewport background stack (vape-coding + canvas + CRT) === */
+.bg-stack {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Slow-drifting purple / black gradient (CSS half of the look) */
+.bg-gradient-vape {
+  position: absolute;
+  inset: -15%;
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 30%, rgba(72, 28, 98, 0.45) 0%, transparent 55%),
+    radial-gradient(ellipse 70% 50% at 85% 70%, rgba(38, 12, 62, 0.5) 0%, transparent 50%),
+    radial-gradient(ellipse 100% 100% at 50% 100%, rgba(8, 2, 16, 0.95) 0%, transparent 45%),
+    linear-gradient(165deg, #0a0214 0%, #12081f 35%, #050208 70%, #020105 100%);
+  animation: vapeGradientDrift 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes vapeGradientDrift {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(2%, -1.5%) scale(1.03); }
+  100% { transform: translate(-2%, 1%) scale(1.02); }
+}
+
+#bg-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
+}
+
+/* CRT scanlines + faint roll (CSS) */
+.crt-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0) 0px,
+    rgba(0, 0, 0, 0) 2px,
+    rgba(0, 0, 0, 0.22) 2px,
+    rgba(0, 0, 0, 0.22) 3px
+  );
+  mix-blend-mode: multiply;
+  animation: crtFlicker 9s ease-in-out infinite;
+  opacity: 0.85;
+}
+@keyframes crtFlicker {
+  0%, 92%, 100% { opacity: 0.82; }
+  94% { opacity: 0.72; }
+  96% { opacity: 0.88; }
+}
+
+/* Subtle “broken signal” veil */
+.fracture-veil {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 120px,
+      rgba(120, 60, 180, 0.03) 120px,
+      rgba(120, 60, 180, 0.03) 122px
+    ),
+    radial-gradient(ellipse 140% 80% at 50% -20%, rgba(140, 80, 200, 0.08), transparent 55%);
+  animation: fractureShift 18s linear infinite;
+}
+@keyframes fractureShift {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-122px); }
+}
+
+/* === Layout: full viewport grid === */
+.app {
+  display: grid;
+  grid-template-rows: 1fr auto;
+  height: 100%;
+  position: relative;
+  z-index: 3;
+}
+
+/* === Character stage === */
+.stage {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  min-height: 0;
+  width: 100%;
+  text-align: center;
+}
+
+.jeppy-logo {
+  font-size: clamp(1.4rem, 5vw, 2rem);
+  font-weight: 700;
+  letter-spacing: 0.55em;
+  text-indent: 0.55em;
+  margin-bottom: 0.35rem;
+  color: #c8a0e0;
+  text-shadow:
+    0 0 14px rgba(140, 80, 200, 0.55),
+    2px 0 0 rgba(40, 20, 60, 0.45),
+    -2px 0 0 rgba(160, 100, 200, 0.3);
+  animation: jeppyGlitchTitle 7s steps(1) infinite;
+  user-select: none;
+  width: 100%;
+}
+@keyframes jeppyGlitchTitle {
+  0%, 91%, 100% { transform: translate(0, 0); opacity: 1; }
+  92% { transform: translate(-2px, 1px); opacity: 0.92; }
+  94% { transform: translate(1px, -1px); opacity: 1; }
+}
+
+/* Centers Jeppy on all viewports (especially mobile) */
+.jeppy-figure {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Slow eerie float + subtle breathing pulse only */
+.jeppy-float {
+  animation: jeppyFloatEerie 9.5s ease-in-out infinite;
+  transform-origin: 50% 90%;
+  will-change: transform;
+}
+@keyframes jeppyFloatEerie {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-18px); }
+}
+.jeppy-breathe {
+  animation: jeppyBreathePulse 5.2s ease-in-out infinite;
+  transform-origin: 50% 88%;
+}
+@keyframes jeppyBreathePulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.045); }
+}
+
+#character-img {
+  max-width: min(58vw, 300px);
+  max-height: 46vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  filter: drop-shadow(0 0 26px rgba(120, 60, 180, 0.5))
+          drop-shadow(0 0 48px rgba(0, 0, 0, 0.9));
+  transform-origin: 50% 88%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-gradient-vape,
+  .crt-overlay,
+  .fracture-veil,
+  .jeppy-float,
+  .jeppy-breathe,
+  .jeppy-logo {
+    animation: none !important;
+  }
+}
+
+.title {
+  margin-top: 0.6rem;
+  font-size: clamp(0.68rem, 2.4vw, 0.82rem);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  opacity: 0.45;
+  text-align: center;
+  width: 100%;
+  color: #a898c0;
+}
+
+/* === Chat panel — glass morphism (purple void) === */
+.chat-panel {
+  position: relative;
+  z-index: 2;
+  padding: 0.75rem 1rem max(1rem, env(safe-area-inset-bottom));
+  max-height: 38vh;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(12, 4, 22, 0.78) 22%,
+    rgba(6, 2, 14, 0.94) 100%
+  );
+}
+
+.chat-log {
+  flex: 1;
+  min-height: 80px;
+  max-height: 22vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 0.35rem;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(120, 70, 160, 0.45) transparent;
+}
+.chat-log::-webkit-scrollbar { width: 5px; }
+.chat-log::-webkit-scrollbar-thumb {
+  background: rgba(90, 50, 120, 0.5);
+  border-radius: 4px;
+}
+
+.bubble {
+  max-width: 92%;
+  padding: 0.55rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  backdrop-filter: blur(14px) saturate(1.2);
+  -webkit-backdrop-filter: blur(14px) saturate(1.2);
+  border: 1px solid rgba(200, 160, 255, 0.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 4px 24px rgba(0, 0, 0, 0.35);
+}
+.bubble.user {
+  align-self: flex-end;
+  background: rgba(60, 28, 88, 0.42);
+  color: #f0e8fa;
+  border-color: rgba(180, 120, 220, 0.2);
+}
+.bubble.entity {
+  align-self: flex-start;
+  background: rgba(18, 10, 32, 0.55);
+  color: #d8cce8;
+  border-color: rgba(140, 90, 200, 0.22);
+}
+.bubble.system {
+  align-self: center;
+  font-size: 0.75rem;
+  opacity: 0.7;
+  background: rgba(0, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.05);
+}
+
+.composer {
+  display: flex;
+  gap: 0.5rem;
+  align-items: stretch;
+  width: 100%;
+  max-width: 100%;
+  justify-content: center;
+}
+.composer input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.65rem 0.85rem;
+  border-radius: 12px;
+  border: 1px solid rgba(160, 120, 200, 0.2);
+  background: rgba(22, 12, 36, 0.55);
+  color: #eee;
+  font-size: 1rem;
+  text-align: center;
+}
+.composer input::placeholder { color: rgba(220, 200, 255, 0.35); text-align: center; }
+.composer input:focus {
+  outline: none;
+  border-color: rgba(180, 130, 255, 0.45);
+  box-shadow:
+    0 0 0 2px rgba(100, 50, 160, 0.3),
+    0 0 22px rgba(140, 80, 200, 0.2);
+}
+.composer button {
+  padding: 0 1.1rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+  background: linear-gradient(145deg, #3d1a52, #1a0a28);
+  color: #e4d4f0;
+  border: 1px solid rgba(180, 120, 220, 0.28);
+  transition: transform 0.15s, filter 0.15s;
+}
+.composer button:hover:not(:disabled) {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+}
+.composer button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+#bg-music {
+  display: none;
+}
+
+/* === Enter overlay === */
+#enter-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse at center, #1a0a24 0%, #050208 72%);
+  cursor: pointer;
+  transition: opacity 0.8s ease, visibility 0.8s;
+}
+#enter-overlay.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.enter-card {
+  text-align: center;
+  padding: 2rem 2.5rem;
+  border-radius: 16px;
+  border: 1px solid rgba(160, 100, 200, 0.25);
+  background: rgba(12, 6, 22, 0.82);
+  backdrop-filter: blur(14px);
+  max-width: 90vw;
+  box-shadow: 0 0 40px rgba(60, 30, 90, 0.35);
+}
+.enter-logo {
+  font-size: clamp(1.5rem, 6vw, 2.1rem);
+  font-weight: 700;
+  letter-spacing: 0.5em;
+  text-indent: 0.5em;
+  margin-bottom: 0.5rem;
+  color: #d4b0f0;
+  text-shadow:
+    0 0 16px rgba(160, 100, 220, 0.55),
+    2px 0 rgba(40, 20, 70, 0.45);
+}
+.enter-card h1 {
+  font-size: clamp(1rem, 3.6vw, 1.35rem);
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  margin-bottom: 0.75rem;
+  color: #b8a0d0;
+}
+.enter-card p {
+  font-size: 0.9rem;
+  opacity: 0.75;
+  line-height: 1.5;
+  color: #c4b8d8;
+}
+.enter-pulse {
+  margin-top: 1.25rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  animation: pulseOp 2s ease-in-out infinite;
+  color: #8060a0;
+}
+@keyframes pulseOp {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* === Mobile polish: centered character + composer === */
+@media (max-width: 767px) {
+  .stage {
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+  #character-img {
+    max-width: min(72vw, 280px);
+    max-height: 42vh;
+  }
+  .chat-panel {
+    max-width: 100%;
+    padding-left: max(0.75rem, env(safe-area-inset-left));
+    padding-right: max(0.75rem, env(safe-area-inset-right));
+  }
+  .composer {
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: stretch;
+  }
+  .composer input {
+    flex: 1 1 auto;
+    min-width: 0;
+    text-align: center;
+  }
+}
+
+@media (min-width: 768px) {
+  #character-img { max-width: min(36vw, 340px); max-height: 52vh; }
+  .chat-panel { max-height: 40vh; }
+  .chat-log { max-height: 26vh; }
+  .composer input {
+    text-align: left;
+  }
+  .composer input::placeholder {
+    text-align: left;
+  }
+}

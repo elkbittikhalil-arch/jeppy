@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#0d0218" />
+  <title>Jeppy</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Layered “fractured reality”: CSS gradient + canvas dust + CRT scanlines -->
+  <div class="bg-stack" aria-hidden="true">
+    <div class="bg-gradient-vape"></div>
+    <canvas id="bg-canvas"></canvas>
+    <div class="crt-overlay"></div>
+    <div class="fracture-veil"></div>
+  </div>
+
+  <!--
+    MUSIC: Put your looping track under music/ (see <source> below). Enter overlay unlocks audio.
+  -->
+  <audio id="bg-music" loop preload="metadata" crossorigin="anonymous">
+    <source src="music/background-loop.mp3" type="audio/mpeg" />
+  </audio>
+
+  <div id="enter-overlay" role="button" tabindex="0" aria-label="Click to enter and meet Jeppy">
+    <div class="enter-card">
+      <p class="enter-logo">JEPPY</p>
+      <h1>Jeppy is here</h1>
+      <p>Click or tap to enter. Sound will unlock.</p>
+      <div class="enter-pulse">CLICK TO ENTER / UNMUTE</div>
+    </div>
+  </div>
+
+  <div class="app">
+    <main class="stage">
+      <p class="jeppy-logo" aria-hidden="true">JEPPY</p>
+      <div class="jeppy-figure">
+        <div class="jeppy-float">
+          <div class="jeppy-breathe">
+            <img
+              id="character-img"
+              src="images/jeppy.svg"
+              width="220"
+              height="360"
+              alt="Jeppy, a thin figure with a star-shaped head and pointed boots"
+            />
+          </div>
+        </div>
+      </div>
+      <p class="title">He sees you typing</p>
+    </main>
+
+    <section class="chat-panel" aria-label="Chat with Jeppy">
+      <div id="chat-log" class="chat-log"></div>
+      <form class="composer" id="chat-form">
+        <input
+          type="text"
+          id="user-input"
+          autocomplete="off"
+          placeholder="Say something to Jeppy…"
+          maxlength="2000"
+        />
+        <button type="submit" id="send-btn">Send</button>
+      </form>
+    </section>
+  </div>
+
+  <!-- Gemini API key: set in app.js (GEMINI_API_KEY). -->
+  <script src="app.js" defer></script>
+</body>
+</html>
