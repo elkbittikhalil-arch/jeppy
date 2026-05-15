@@ -1,5 +1,5 @@
 // حط المفتاح ديالك هنا
-const GEMINI_API_KEY = "AIzaSyDeFImILvEUueWaUJPFEd2p4yb6Mks75yc"; 
+const GEMINI_API_KEY = AIzaSyDeFImILvEUueWaUJPFEd2p4yb6Mks75yc; 
 
 async function sendMessage() {
     const userInput = document.getElementById('user-input').value; // تأكد من ID ديال input
