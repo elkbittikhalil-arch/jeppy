@@ -10,8 +10,8 @@
    * the key (HTTP referrer / bundle ID) in Google AI Studio, or a serverless proxy.
    * Optional: set window.__GEMINI_KEY in a small inline script before this file loads.
    * ============================================================ */
-  const GEMINI_API_KEY = "AIzaSyBfxk3a0n4o-Jt0HS5eMvgxXQsAJOGpjN0";
-  const API_KEY_PLACEHOLDER = "";
+  const GEMINI_API_KEY = "AIzaSyDeFImILvEUueWaUJPFEd2p4yb6Mks75yc";
+  const API_KEY_PLACEHOLDER = "AIzaSyBfxk3a0n4o-Jt0HS5eMvgxXQsAJOGpjN0";
 
   function resolveApiKey() {
     if (typeof window.__GEMINI_KEY === "string" && window.__GEMINI_KEY.trim().length > 0) {
