@@ -1,46 +1,49 @@
-// حط المفتاح الجديد اللي بان فآخر تصويرة هنا
-const GEMINI_API_KEY = "AIzaSyDeFimIlvEUueWaUJPFEd2p4yb6Mks75yc"; 
+const GEMINI_API_KEY = "AIzaSyDeFimIlvEUueWaUJPFEd2p4yb6Mks75yc"; // المفتاح اللي فالتصويرة
 
 async function sendMessage() {
-    const inputField = document.querySelector('#user-input') || document.querySelector('input[type="text"]');
-    const userInput = inputField.value;
-    if (!userInput) return;
+    const input = document.querySelector('input'); 
+    const message = input.value;
+    if (!message) return;
 
-    // الرابط الصحيح لنسخة v1beta
+    // عرض رسالتك
+    addMessageToChat(message, 'user');
+    input.value = '';
+
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
 
     try {
         const response = await fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: userInput }] }],
-                // هادي كتخلي Jeppy يجاوب بطريقة غامضة
-                systemInstruction: {
-                    parts: [{ text: "You are Jeppy, a mysterious star-faced creature. Be scary, cryptic, and use short sentences." }]
-                }
+                contents: [{ parts: [{ text: message }] }],
+                systemInstruction: { parts: [{ text: "You are Jeppy, a creepy, mysterious star-faced entity. Reply in short, scary Darija or English." }] }
             })
         });
 
         const data = await response.json();
+        const reply = data.candidates[0].content.parts[0].text;
+
+        // عرض رد Jeppy
+        addMessageToChat(reply, 'jeppy');
         
-        if (data.candidates) {
-            const reply = data.candidates[0].content.parts[0].text;
-            
-            // 1. عرض الرد في الشاشة
-            document.querySelector('.chat-display').innerHTML += `<p>Jeppy: ${reply}</p>`;
-            
-            // 2. تشغيل الصوت الغريب (Scary Voice)
-            speak(reply);
-        }
-    } catch (e) {
-        console.error("API failed:", e);
+        // تشغيل الصوت المرعب
+        speak(reply);
+
+    } catch (error) {
+        console.error("خطأ في الاتصال:", error);
     }
 }
 
-function speak(message) {
-    const speech = new SpeechSynthesisUtterance(message);
-    speech.pitch = 0.3; // صوت عميق جداً ومرعب
-    speech.rate = 0.6;  // سرعة بطيئة
-    window.speechSynthesis.speak(speech);
+// دالة الصوت (Free & Scary)
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.pitch = 0.4; // صوت غليظ
+    utterance.rate = 0.7;  // بطيء
+    window.speechSynthesis.speak(utterance);
+}
+
+function addMessageToChat(text, sender) {
+    const chatBox = document.querySelector('.chat-display'); // تأكد من اسم الـ class عندك
+    chatBox.innerHTML += `<div class="${sender}">${text}</div>`;
 }
