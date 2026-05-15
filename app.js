@@ -11,7 +11,7 @@
    * Optional: set window.__GEMINI_KEY in a small inline script before this file loads.
    * ============================================================ */
   const GEMINI_API_KEY = "AIzaSyBfxk3a0n4o-Jt0HS5eMvgxXQsAJOGpjN0";
-  const API_KEY_PLACEHOLDER = "AIzaSyBfxk3a0n4o-Jt0HS5eMvgxXQsAJOGpjN0";
+  const API_KEY_PLACEHOLDER = "";
 
   function resolveApiKey() {
     if (typeof window.__GEMINI_KEY === "string" && window.__GEMINI_KEY.trim().length > 0) {
